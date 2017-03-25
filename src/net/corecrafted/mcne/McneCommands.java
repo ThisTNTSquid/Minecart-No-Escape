@@ -16,12 +16,15 @@ import net.md_5.bungee.api.ChatColor;
 
 public class McneCommands implements CommandExecutor {
 
-	McneMain plugin;
-
 	public McneCommands(McneMain pl) {
 		plugin = pl;
 	}
 
+	McneMain plugin;
+
+	String prefix = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix"));
+	String unlockMsg = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("unlock-message"));
+	String lockMsg = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("lock-message"));
 	public static ArrayList<Player> lockedPlayer = new ArrayList<Player>();
 
 	@Override
@@ -29,7 +32,7 @@ public class McneCommands implements CommandExecutor {
 		double range = plugin.getConfig().getDouble("near-area");
 
 		if (args.length == 0) {
-			sender.sendMessage(McneMain.prefix + ChatColor.RED + " Please specify an action [lock/unlock]");
+			sender.sendMessage(prefix + ChatColor.RED + " Please specify an action [lock/unlock]");
 			return true;
 		} else if (args.length == 1) {
 
@@ -42,12 +45,12 @@ public class McneCommands implements CommandExecutor {
 
 			if (args[0].equals("lock") || args[0].equals("unlock") || args[0].equals("toggle")) {
 				sender.sendMessage(
-						McneMain.prefix + ChatColor.RED + " Please select a target player [playername/-near]");
+						prefix + ChatColor.RED + " Please select a target player [playername/-near]");
 				return true;
 			} else {
 				if (!(args[0].equals("list"))) {
 					sender.sendMessage(
-							McneMain.prefix + ChatColor.RED + " Please specify a proper action [lock/unlock/toggle]");
+							prefix + ChatColor.RED + " Please specify a proper action [lock/unlock/toggle]");
 					return true;
 				}
 			}
@@ -57,14 +60,15 @@ public class McneCommands implements CommandExecutor {
 			if (args[0].equals("lock")) {
 				if (args[1].equals("-near")) {
 					addnearToLock(sender, range);
-					sender.sendMessage(McneMain.prefix + ChatColor.GREEN + " Add - OK");
+					sender.sendMessage(prefix + ChatColor.GREEN + " Add - OK");
 				} else {
 					Player target = Bukkit.getPlayer(args[1]);
 					if (target == null) {
-						sender.sendMessage(McneMain.prefix + ChatColor.RED + " Add - The player is not online");
+						sender.sendMessage(prefix + ChatColor.RED + " Add - The player is not online");
 					} else {
 						lockedPlayer.add(target.getPlayer());
-						sender.sendMessage(McneMain.prefix + ChatColor.GREEN + " Add - OK");
+						sender.sendMessage(prefix + ChatColor.GREEN + " Add - OK");
+						target.sendMessage(prefix + " "+lockMsg);
 					}
 				}
 				return true;
@@ -72,14 +76,15 @@ public class McneCommands implements CommandExecutor {
 			if (args[0].equals("unlock")) {
 				if (args[1].equals("-near")) {
 					removeFromNear(sender, range);
-					sender.sendMessage(McneMain.prefix + ChatColor.GREEN + " Remove - OK");
+					sender.sendMessage(prefix + ChatColor.GREEN + " Remove - OK");
 				} else {
 					Player target = Bukkit.getPlayer(args[1]);
 					if (target == null) {
-						sender.sendMessage(McneMain.prefix + ChatColor.RED + " Remove - The player is not online");
+						sender.sendMessage(prefix + ChatColor.RED + " Remove - The player is not online");
 					} else {
 						lockedPlayer.remove(target.getPlayer());
-						sender.sendMessage(McneMain.prefix + ChatColor.GREEN + " Remove - OK");
+						sender.sendMessage(prefix + ChatColor.GREEN + " Remove - OK");
+						target.sendMessage(prefix + " "+unlockMsg);
 					}
 				}
 				return true;
@@ -100,10 +105,11 @@ public class McneCommands implements CommandExecutor {
 				if (entity instanceof Player) {
 					Player player1 = (Player) entity;
 					lockedPlayer.add(player1);
+					player1.sendMessage(prefix + " "+lockMsg);
 				}
 			}
 		} else if (sender instanceof BlockCommandSender) {
-			Block cmdBlock = (Block) sender;
+			Block cmdBlock = ((BlockCommandSender) sender).getBlock();
 			Location loc = cmdBlock.getLocation();
 			ArrayList<Entity> targetRange = (ArrayList<Entity>) cmdBlock.getWorld().getNearbyEntities(loc, nearRange,
 					nearRange, nearRange);
@@ -111,10 +117,11 @@ public class McneCommands implements CommandExecutor {
 				if (entity instanceof Player) {
 					Player player = (Player) entity;
 					lockedPlayer.add(player);
+					player.sendMessage(prefix + " "+lockMsg);
 				}
 			}
 		} else {
-			sender.sendMessage(McneMain.prefix + ChatColor.RED + " You must be in the game to execute this");
+			sender.sendMessage(prefix + ChatColor.RED + " You must be in the game to execute this");
 		}
 	}
 
@@ -128,10 +135,11 @@ public class McneCommands implements CommandExecutor {
 				if (entity instanceof Player) {
 					Player player1 = (Player) entity;
 					lockedPlayer.remove(player1);
+					player1.sendMessage(prefix + " "+unlockMsg);
 				}
 			}
 		} else if (sender instanceof BlockCommandSender) {
-			Block cmdBlock = (Block) sender;
+			Block cmdBlock = ((BlockCommandSender) sender).getBlock();
 			Location loc = cmdBlock.getLocation();
 			ArrayList<Entity> targetRange = (ArrayList<Entity>) cmdBlock.getWorld().getNearbyEntities(loc, nearRange,
 					nearRange, nearRange);
@@ -139,10 +147,11 @@ public class McneCommands implements CommandExecutor {
 				if (entity instanceof Player) {
 					Player player = (Player) entity;
 					lockedPlayer.remove(player);
+					player.sendMessage(prefix + " "+unlockMsg);
 				}
 			}
 		} else {
-			sender.sendMessage(McneMain.prefix + ChatColor.RED + " You must be in the game to execute this");
+			sender.sendMessage(prefix + ChatColor.RED + " You must be in the game to execute this");
 		}
 	}
 }
