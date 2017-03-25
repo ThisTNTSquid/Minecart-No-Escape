@@ -16,7 +16,9 @@ public class McneMain extends JavaPlugin {
 	String plName = pdf.getName();
 	String plVersion = pdf.getVersion();
 	ConsoleCommandSender console = this.getServer().getConsoleSender();
-	String prefix = this.getConfig().getString("prefix");
+	final String prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("prefix"));
+	final String unlockMsg = ChatColor.translateAlternateColorCodes('&', this.getConfig().getString("unlock-message"));
+	final String lockMsg = ChatColor.translateAlternateColorCodes('&', this.getConfig().getString("lock-message"));
 	
 	public void onLoad(){
 		logger.info("Loading "+plName+" "+plVersion+"....");
