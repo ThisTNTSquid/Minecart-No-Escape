@@ -16,8 +16,8 @@ public class McneMain extends JavaPlugin {
 	String plName = pdf.getName();
 	String plVersion = pdf.getVersion();
 	ConsoleCommandSender console = this.getServer().getConsoleSender();
-	public static final String prefix = ChatColor.GRAY + "[MinecartNoEscape]";
-
+	String prefix = this.getConfig().getString("prefix");
+	
 	public void onLoad(){
 		logger.info("Loading "+plName+" "+plVersion+"....");
 	}
