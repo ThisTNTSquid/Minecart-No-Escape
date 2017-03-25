@@ -18,10 +18,14 @@ public class McneMain extends JavaPlugin {
 	ConsoleCommandSender console = this.getServer().getConsoleSender();
 	public static final String prefix = ChatColor.GRAY + "[MinecartNoEscape]";
 
+	public void onLoad(){
+		logger.info("Loading "+plName+" "+plVersion+"....");
+	}
+	
 	public void onEnable() {
 		logger.info(plName + " " + plVersion + " has been enabled");
 		console.sendMessage(prefix + ChatColor.DARK_PURPLE + " Thanks for installing, hope it fix your problem :)");
-		this.regCommands();
+		this.getCommand("mcne").setExecutor(new McneCommands(this));
 		this.regConfig();
 		this.getServer().getPluginManager().registerEvents(new McneEvents(), this);
 	}
@@ -30,9 +34,7 @@ public class McneMain extends JavaPlugin {
 		logger.info(plName + " " + plVersion + " has been unloaded");
 	}
 
-	private void regCommands() {
-		this.getCommand("mcne").setExecutor(new McneCommands(this));
-	}
+		
 
 	private void regConfig() {
 		try {

@@ -24,10 +24,11 @@ public class McneCommands implements CommandExecutor {
 
 	public static ArrayList<Player> lockedPlayer = new ArrayList<Player>();
 
-	double nearRange = plugin.getConfig().getDouble("near-area");
+	
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		double range = plugin.getConfig().getDouble("near-area");
 
 		if (args.length == 0) {
 			sender.sendMessage(McneMain.prefix + ChatColor.RED + " Please specify an action [lock/unlock]");
@@ -47,7 +48,7 @@ public class McneCommands implements CommandExecutor {
 		if (args.length == 2) {
 			if (args[0].equals("lock")) {
 				if (args[1].equals("-near")) {
-					addnearToLock(sender);
+					addnearToLock(sender,range);
 				} else {
 					Player target = Bukkit.getPlayer(args[1]);
 					lockedPlayer.add(target);
@@ -56,7 +57,7 @@ public class McneCommands implements CommandExecutor {
 			}
 			if (args[0].equals("unlock")){
 				if (args[1].equals("-near")){
-					removeFromNear(sender);
+					removeFromNear(sender,range);
 				} else {
 					Player target = Bukkit.getPlayer(args[1]);
 					lockedPlayer.remove(target);
@@ -73,7 +74,7 @@ public class McneCommands implements CommandExecutor {
 		return true;
 	}
 
-	private void addnearToLock(CommandSender sender) {
+	private void addnearToLock(CommandSender sender, double nearRange) {
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			Location loc = player.getLocation();
@@ -101,7 +102,7 @@ public class McneCommands implements CommandExecutor {
 		}
 	}
 	
-	private void removeFromNear(CommandSender sender){
+	private void removeFromNear(CommandSender sender ,double nearRange){
 		if (sender instanceof Player) {
 			Player player = (Player) sender;
 			Location loc = player.getLocation();

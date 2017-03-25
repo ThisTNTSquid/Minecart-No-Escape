@@ -1,7 +1,9 @@
 name: MinecartNoEscape
-version: alpha-0.1
+version: alpha-0.2
 main: net.corecrafted.mcne.McneMain
+description: A small plugin to get rid of player escaping from minecraft while in tutorial tracks
+author: ThisTNTSquid
 commands:
   mcne:
     description: Minecart No Escape main command
-    usage: /mcne <lock/unlock> <player/near>
+    usage: /mcne <lock/unlock> <player/-near>

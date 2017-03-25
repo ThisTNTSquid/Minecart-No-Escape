@@ -3,7 +3,7 @@
 # +---------------------------+
 
 # Define the range for "near" selector in the command
-near-area: 3
+near-area: 3.0
 
 
 
