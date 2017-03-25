@@ -1,5 +1,6 @@
 package net.corecrafted.mcne;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 import org.bukkit.command.ConsoleCommandSender;
@@ -19,8 +20,9 @@ public class McneMain extends JavaPlugin {
 
 	public void onEnable() {
 		logger.info(plName + " " + plVersion + " has been enabled");
-		console.sendMessage(ChatColor.DARK_PURPLE + "Thanks for installing, hope it fix your problem :)");
+		console.sendMessage(ChatColor.DARK_PURPLE +prefix+ " Thanks for installing, hope it fix your problem :)");
 		this.regCommands();
+		this.regConfig();
 	}
 
 	public void onDisable() {
@@ -29,5 +31,25 @@ public class McneMain extends JavaPlugin {
 
 	private void regCommands() {
 		this.getCommand("mcne").setExecutor(new McneCommands());
+	}
+	
+	private void regConfig(){
+		try {
+			if (!(this.getDataFolder().exists())){
+				this.getDataFolder().mkdirs();
+			}
+			
+			File config = new File(this.getDataFolder(),"config.yml");
+			if (!(config.exists())){
+				logger.info("Config not found, creating one for you...");
+				this.saveDefaultConfig();
+			} else {
+				logger.info("Loading config...");
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		} finally {
+			logger.info("Config loaded");
+		}
 	}
 }

@@ -12,7 +12,7 @@ public class McneCommands implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
 		if (args.length==0){
-			sender.sendMessage(McneMain.prefix+ChatColor.RED+"Please specific an action [lock/unlock]");
+			sender.sendMessage(McneMain.prefix+ChatColor.RED+" Please specify an action [lock/unlock/toggle]");
 		}
 		return false;
 	}

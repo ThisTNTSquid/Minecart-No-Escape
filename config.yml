@@ -1,0 +1,11 @@
+# +---------------------------+
+# | Minecart No Escape Config |
+# +---------------------------+
+
+# Define the range for "near" selector in the command
+near-area: 3
+
+
+
+
+# That's it, end of config
