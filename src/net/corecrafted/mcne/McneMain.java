@@ -16,13 +16,14 @@ public class McneMain extends JavaPlugin {
 	String plName = pdf.getName();
 	String plVersion = pdf.getVersion();
 	ConsoleCommandSender console = this.getServer().getConsoleSender();
-	public static final String prefix = ChatColor.GRAY+"[MinecartNoEscape]";
+	public static final String prefix = ChatColor.GRAY + "[MinecartNoEscape]";
 
 	public void onEnable() {
 		logger.info(plName + " " + plVersion + " has been enabled");
-		console.sendMessage(ChatColor.DARK_PURPLE +prefix+ " Thanks for installing, hope it fix your problem :)");
+		console.sendMessage(prefix + ChatColor.DARK_PURPLE + " Thanks for installing, hope it fix your problem :)");
 		this.regCommands();
 		this.regConfig();
+		this.getServer().getPluginManager().registerEvents(new McneEvents(), this);
 	}
 
 	public void onDisable() {
@@ -30,23 +31,23 @@ public class McneMain extends JavaPlugin {
 	}
 
 	private void regCommands() {
-		this.getCommand("mcne").setExecutor(new McneCommands());
+		this.getCommand("mcne").setExecutor(new McneCommands(this));
 	}
-	
-	private void regConfig(){
+
+	private void regConfig() {
 		try {
-			if (!(this.getDataFolder().exists())){
+			if (!(this.getDataFolder().exists())) {
 				this.getDataFolder().mkdirs();
 			}
-			
-			File config = new File(this.getDataFolder(),"config.yml");
-			if (!(config.exists())){
+
+			File config = new File(this.getDataFolder(), "config.yml");
+			if (!(config.exists())) {
 				logger.info("Config not found, creating one for you...");
 				this.saveDefaultConfig();
 			} else {
 				logger.info("Loading config...");
 			}
-		} catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			logger.info("Config loaded");
