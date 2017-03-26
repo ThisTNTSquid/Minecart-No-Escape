@@ -88,9 +88,14 @@ public class McneCommands implements CommandExecutor {
 						if (target == null) {
 							sender.sendMessage(prefix + ChatColor.RED + " Add - The player is not online");
 						} else {
-							lockedPlayer.add(target.getPlayer());
-							sender.sendMessage(prefix + ChatColor.GREEN + " Add - OK");
-							target.sendMessage(prefix + " " + lockMsg);
+							if (!(lockedPlayer.contains(target))){
+								lockedPlayer.add(target.getPlayer());
+								sender.sendMessage(prefix + ChatColor.GREEN + " Add - OK");
+								target.sendMessage(prefix + " " + lockMsg);
+							} else {
+								sender.sendMessage(prefix + ChatColor.GOLD + " Add - Player already locked");
+							}
+							
 						}
 					}
 				} else {
@@ -140,8 +145,11 @@ public class McneCommands implements CommandExecutor {
 			for (Entity entity : targetRange) {
 				if (entity instanceof Player) {
 					Player player1 = (Player) entity;
-					lockedPlayer.add(player1);
-					player1.sendMessage(prefix + " " + lockMsg);
+					if (!(lockedPlayer.contains(player1))){
+						lockedPlayer.add(player1);
+						player1.sendMessage(prefix + " " + lockMsg);
+					}
+					
 				}
 			}
 		} else if (sender instanceof BlockCommandSender) {
@@ -152,8 +160,11 @@ public class McneCommands implements CommandExecutor {
 			for (Entity entity : targetRange) {
 				if (entity instanceof Player) {
 					Player player = (Player) entity;
-					lockedPlayer.add(player);
-					player.sendMessage(prefix + " " + lockMsg);
+					if (!(lockedPlayer.contains(player))){
+						lockedPlayer.add(player);
+						player.sendMessage(prefix + " " + lockMsg);
+					}
+					
 				}
 			}
 		} else {
