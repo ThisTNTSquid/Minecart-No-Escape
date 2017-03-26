@@ -14,5 +14,8 @@ lock-message: '&6You are locked in your train'
 # Message of unlocking a player from the minecart
 unlock-message: '&6You are unlocked from your train'
 
+# Message to be display when player with no permission attempt to execute McNE commands
+no-permission-message: '&4You do not have permission to do that'
+
 
 # That's it, end of config !

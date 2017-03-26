@@ -19,14 +19,14 @@ public class McneMain extends JavaPlugin {
 	final String prefix = ChatColor.translateAlternateColorCodes('&', getConfig().getString("prefix"));
 	final String unlockMsg = ChatColor.translateAlternateColorCodes('&', this.getConfig().getString("unlock-message"));
 	final String lockMsg = ChatColor.translateAlternateColorCodes('&', this.getConfig().getString("lock-message"));
-	
-	public void onLoad(){
-		logger.info("Loading "+plName+" "+plVersion+"....");
+
+	public void onLoad() {
+		logger.info("Loading " + plName + " " + plVersion + "....");
 	}
-	
+
 	public void onEnable() {
 		logger.info(plName + " " + plVersion + " has been enabled");
-		console.sendMessage(prefix + ChatColor.DARK_PURPLE + " Thanks for installing, hope it fix your problem :)");
+		console.sendMessage(prefix + ChatColor.DARK_PURPLE + " Thanks for installing, hope it solves your problem :)");
 		this.getCommand("mcne").setExecutor(new McneCommands(this));
 		this.regConfig();
 		this.getServer().getPluginManager().registerEvents(new McneEvents(), this);
@@ -35,8 +35,6 @@ public class McneMain extends JavaPlugin {
 	public void onDisable() {
 		logger.info(plName + " " + plVersion + " has been unloaded");
 	}
-
-		
 
 	private void regConfig() {
 		try {

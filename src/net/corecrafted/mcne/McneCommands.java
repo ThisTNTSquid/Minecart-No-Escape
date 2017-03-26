@@ -33,6 +33,8 @@ public class McneCommands implements CommandExecutor {
 		final String lockMsg = ChatColor.translateAlternateColorCodes('&',
 				plugin.getConfig().getString("lock-message"));
 		final String prefix = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix"));
+		final String noPermMsg = ChatColor.translateAlternateColorCodes('&',
+				plugin.getConfig().getString("no-permission-message"));
 
 		if (args.length == 0) {
 			sender.sendMessage(prefix + ChatColor.RED + " Please specify an action [lock/unlock/list/reload]");
@@ -40,61 +42,83 @@ public class McneCommands implements CommandExecutor {
 		} else if (args.length == 1) {
 
 			if (args[0].equalsIgnoreCase("list")) {
-				sender.sendMessage(ChatColor.YELLOW + "Current Minecart Locked Player: \n");
-				for (Player p : lockedPlayer) {
-					sender.sendMessage(ChatColor.GRAY + "- " + ChatColor.GOLD + p.getName() + "\n");
+				if (sender.hasPermission("mcne.list")) {
+					sender.sendMessage(ChatColor.YELLOW + "Current Minecart Locked Player: \n");
+					for (Player p : lockedPlayer) {
+						sender.sendMessage(ChatColor.GRAY + "- " + ChatColor.GOLD + p.getName() + "\n");
+						return true;
+					}
+				} else {
+					sender.sendMessage(prefix + " " + noPermMsg);
 					return true;
 				}
 			}
-			if (args[0].equalsIgnoreCase("reload")){
-				plugin.reloadConfig();
-				sender.sendMessage(prefix+ChatColor.GREEN+" Config reloaded !");
+			if (args[0].equalsIgnoreCase("reload")) {
+				if (sender.hasPermission("mcne.reload")) {
+					plugin.reloadConfig();
+					sender.sendMessage(prefix + ChatColor.GREEN + " Config reloaded !");
+					return true;
+				} else {
+					sender.sendMessage(prefix + " " + noPermMsg);
+					return true;
+				}
+			}
+			if (args[0].equalsIgnoreCase("list")){
 				return true;
 			}
-
-			if (args[0].equalsIgnoreCase("lock") || args[0].equalsIgnoreCase("unlock") || args[0].equalsIgnoreCase("toggle")) {
+			if (args[0].equalsIgnoreCase("lock") || args[0].equalsIgnoreCase("unlock")) {
 				sender.sendMessage(prefix + ChatColor.RED + " Please select a target player [playername/-near]");
 				return true;
 			} else {
-				if (!(args[0].equalsIgnoreCase("list")) || !(args[0].equalsIgnoreCase("reload"))) {
-					sender.sendMessage(prefix + ChatColor.RED + " Please specify a proper action [lock/unlock/toggle]");
-					return true;
-				}
+				sender.sendMessage(
+						prefix + ChatColor.RED + " Please specify a proper action [lock/unlock/list/reload]");
+				return true;
+
 			}
 
 		}
 		if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("lock")) {
-				if (args[1].equalsIgnoreCase("-near")) {
-					addnearToLock(sender, range);
-					sender.sendMessage(prefix + ChatColor.GREEN + " Add - OK");
-				} else {
-					Player target = Bukkit.getPlayer(args[1]);
-					if (target == null) {
-						sender.sendMessage(prefix + ChatColor.RED + " Add - The player is not online");
-					} else {
-						lockedPlayer.add(target.getPlayer());
+				if (sender.hasPermission("mcne.control")) {
+					if (args[1].equalsIgnoreCase("-near")) {
+						addnearToLock(sender, range);
 						sender.sendMessage(prefix + ChatColor.GREEN + " Add - OK");
-						target.sendMessage(prefix + " " + lockMsg);
+					} else {
+						Player target = Bukkit.getPlayer(args[1]);
+						if (target == null) {
+							sender.sendMessage(prefix + ChatColor.RED + " Add - The player is not online");
+						} else {
+							lockedPlayer.add(target.getPlayer());
+							sender.sendMessage(prefix + ChatColor.GREEN + " Add - OK");
+							target.sendMessage(prefix + " " + lockMsg);
+						}
 					}
+				} else {
+					sender.sendMessage(prefix + " " + noPermMsg);
+					return true;
 				}
-				return true;
+
 			}
 			if (args[0].equalsIgnoreCase("unlock")) {
-				if (args[1].equalsIgnoreCase("-near")) {
-					removeFromNear(sender, range);
-					sender.sendMessage(prefix + ChatColor.GREEN + " Remove - OK");
-				} else {
-					Player target = Bukkit.getPlayer(args[1]);
-					if (target == null) {
-						sender.sendMessage(prefix + ChatColor.RED + " Remove - The player is not online");
-					} else {
-						lockedPlayer.remove(target.getPlayer());
+				if (sender.hasPermission("mcne.control")) {
+					if (args[1].equalsIgnoreCase("-near")) {
+						removeFromNear(sender, range);
 						sender.sendMessage(prefix + ChatColor.GREEN + " Remove - OK");
-						target.sendMessage(prefix + " " + unlockMsg);
+					} else {
+						Player target = Bukkit.getPlayer(args[1]);
+						if (target == null) {
+							sender.sendMessage(prefix + ChatColor.RED + " Remove - The player is not online");
+						} else {
+							lockedPlayer.remove(target.getPlayer());
+							sender.sendMessage(prefix + ChatColor.GREEN + " Remove - OK");
+							target.sendMessage(prefix + " " + unlockMsg);
+						}
 					}
+				} else {
+					sender.sendMessage(prefix + " " + noPermMsg);
+					return true;
 				}
-				return true;
+
 			}
 
 		}
