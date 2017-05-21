@@ -26,7 +26,7 @@ public class McneMain extends JavaPlugin {
 
 	public void onEnable() {
 		logger.info(plName + " " + plVersion + " has been enabled");
-		console.sendMessage(prefix + ChatColor.DARK_PURPLE + " Thanks for installing, hope it solves your problem :)");
+		//console.sendMessage(prefix + ChatColor.DARK_PURPLE + " Thanks for installing, hope it solves your problem :)");
 		this.getCommand("mcne").setExecutor(new McneCommands(this));
 		this.regConfig();
 		this.getServer().getPluginManager().registerEvents(new McneEvents(), this);

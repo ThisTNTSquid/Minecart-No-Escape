@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
@@ -63,7 +64,7 @@ public class McneCommands implements CommandExecutor {
 					return true;
 				}
 			}
-			if (args[0].equalsIgnoreCase("list")){
+			if (args[0].equalsIgnoreCase("list")) {
 				return true;
 			}
 			if (args[0].equalsIgnoreCase("lock") || args[0].equalsIgnoreCase("unlock")) {
@@ -88,14 +89,18 @@ public class McneCommands implements CommandExecutor {
 						if (target == null) {
 							sender.sendMessage(prefix + ChatColor.RED + " Add - The player is not online");
 						} else {
-							if (!(lockedPlayer.contains(target))){
+							if (!(lockedPlayer.contains(target))) {
 								lockedPlayer.add(target.getPlayer());
 								sender.sendMessage(prefix + ChatColor.GREEN + " Add - OK");
 								target.sendMessage(prefix + " " + lockMsg);
+								target.playSound(target.getLocation(),
+										Sound.valueOf(plugin.getConfig().getString("sounds.lock.sound")),
+										(float) plugin.getConfig().getDouble("sounds.lock.volume"),
+										(float) plugin.getConfig().getDouble("sounds.lock.volume"));
 							} else {
 								sender.sendMessage(prefix + ChatColor.GOLD + " Add - Player already locked");
 							}
-							
+
 						}
 					}
 				} else {
@@ -117,6 +122,10 @@ public class McneCommands implements CommandExecutor {
 							lockedPlayer.remove(target.getPlayer());
 							sender.sendMessage(prefix + ChatColor.GREEN + " Remove - OK");
 							target.sendMessage(prefix + " " + unlockMsg);
+							target.playSound(target.getLocation(),
+									Sound.valueOf(plugin.getConfig().getString("sounds.unlock.sound")),
+									(float) plugin.getConfig().getDouble("sounds.unlock.volume"),
+									(float) plugin.getConfig().getDouble("sounds.unlock.volume"));
 						}
 					}
 				} else {
@@ -132,7 +141,7 @@ public class McneCommands implements CommandExecutor {
 	}
 
 	private void addnearToLock(CommandSender sender, double nearRange) {
-		;
+
 		final String lockMsg = ChatColor.translateAlternateColorCodes('&',
 				plugin.getConfig().getString("lock-message"));
 		final String prefix = ChatColor.translateAlternateColorCodes('&', plugin.getConfig().getString("prefix"));
@@ -145,11 +154,18 @@ public class McneCommands implements CommandExecutor {
 			for (Entity entity : targetRange) {
 				if (entity instanceof Player) {
 					Player player1 = (Player) entity;
-					if (!(lockedPlayer.contains(player1))){
+					if (!(lockedPlayer.contains(player1))) {
 						lockedPlayer.add(player1);
 						player1.sendMessage(prefix + " " + lockMsg);
+						if (plugin.getConfig().getBoolean("enable-sounds") == true) {
+							player1.playSound(player1.getLocation(),
+									Sound.valueOf(plugin.getConfig().getString("sounds.lock.sound")),
+									(float) plugin.getConfig().getDouble("sounds.lock.volume"),
+									(float) plugin.getConfig().getDouble("sounds.lock.volume"));
+						}
+
 					}
-					
+
 				}
 			}
 		} else if (sender instanceof BlockCommandSender) {
@@ -160,11 +176,18 @@ public class McneCommands implements CommandExecutor {
 			for (Entity entity : targetRange) {
 				if (entity instanceof Player) {
 					Player player = (Player) entity;
-					if (!(lockedPlayer.contains(player))){
+					if (!(lockedPlayer.contains(player))) {
 						lockedPlayer.add(player);
 						player.sendMessage(prefix + " " + lockMsg);
+						if (plugin.getConfig().getBoolean("enable-sounds") == true) {
+							player.playSound(player.getLocation(),
+									Sound.valueOf(plugin.getConfig().getString("sounds.lock.sound")),
+									(float) plugin.getConfig().getDouble("sounds.lock.volume"),
+									(float) plugin.getConfig().getDouble("sounds.lock.volume"));
+						}
+
 					}
-					
+
 				}
 			}
 		} else {
@@ -186,6 +209,13 @@ public class McneCommands implements CommandExecutor {
 					Player player1 = (Player) entity;
 					lockedPlayer.remove(player1);
 					player1.sendMessage(prefix + " " + unlockMsg);
+					if (plugin.getConfig().getBoolean("enable-sounds") == true) {
+						player1.playSound(player1.getLocation(),
+								Sound.valueOf(plugin.getConfig().getString("sounds.unlock.sound")),
+								(float) plugin.getConfig().getDouble("sounds.unlock.volume"),
+								(float) plugin.getConfig().getDouble("sounds.unlock.volume"));
+					}
+
 				}
 			}
 		} else if (sender instanceof BlockCommandSender) {
@@ -198,6 +228,13 @@ public class McneCommands implements CommandExecutor {
 					Player player = (Player) entity;
 					lockedPlayer.remove(player);
 					player.sendMessage(prefix + " " + unlockMsg);
+					if (plugin.getConfig().getBoolean("enable-sounds") == true) {
+						player.playSound(player.getLocation(),
+								Sound.valueOf(plugin.getConfig().getString("sounds.unlock.sound")),
+								(float) plugin.getConfig().getDouble("sounds.unlock.volume"),
+								(float) plugin.getConfig().getDouble("sounds.unlock.volume"));
+					}
+
 				}
 			}
 		} else {
